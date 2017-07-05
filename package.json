@@ -1,0 +1,20 @@
+{
+  "name": "deep-diff-highlight",
+  "version": "0.1.0",
+  "description": " The highlighter for the deep-diff module",
+  "main": "index.js",
+  "dependencies": {
+    "chalk": "^2.0.1",
+    "stringify-object": "^3.2.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/b0rey/deep-diff-highlight.git"
+  },
+  "author": "b0rey",
+  "license": "BSD-2-Clause",
+  "bugs": {
+    "url": "https://github.com/b0rey/deep-diff-highlight/issues"
+  },
+  "homepage": "https://github.com/b0rey/deep-diff-highlight#readme"
+}
