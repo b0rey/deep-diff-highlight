@@ -3,9 +3,19 @@
   "version": "0.1.0",
   "description": " The highlighter for the deep-diff module",
   "main": "index.js",
+  "directories": {
+    "test": "test"
+  },
   "dependencies": {
     "chalk": "^2.0.1",
     "stringify-object": "^3.2.0"
+  },
+  "devDependencies": {
+    "chai": "^4.0.2",
+    "mocha": "^3.4.2"
+  },
+  "scripts": {
+    "test": "mocha --reporter spec"
   },
   "repository": {
     "type": "git",
