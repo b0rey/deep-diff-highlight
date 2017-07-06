@@ -38,7 +38,7 @@ var renders = {
 
 function stringify(obj) {
     return stringifyObject(obj, { indent: indent });
-};
+}
 
 function buildPath(path) {
     if (!Array.isArray(path)) return '';
@@ -48,7 +48,7 @@ function buildPath(path) {
             acc + '[' + item + ']' :
             acc + '.' + item;
     }, 'obj');
-};
+}
 
 module.exports = function(diff, params) {
     if (params && params.indent) {
