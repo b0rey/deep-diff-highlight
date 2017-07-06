@@ -4,26 +4,19 @@ var stringifyObject = require('stringify-object'),
     chalk = require('chalk'),
     inverseGreen = chalk.green.inverse,
     inverseRed = chalk.red.inverse,
-    grey = chalk.grey;
+    grey = chalk.grey,
+    indent = '  ';
 
-module.exports = function(diff) {
-    return new JSONDiff(diff).getText();
-};
-
-function JSONDiff(diff) {
-    this.data = diff;
-}
-
-JSONDiff.prototype.renders = {
+var renders = {
     ND: function (diff, color, field) {
-        var path = diff.data.path;
+        var path = diff.path;
 
         if (!Array.isArray(path)) {
-            return ' = ' + color(diff.getStringifyField(field));
+            return ' = ' + color(stringify(diff[field]));
         }
 
         var last = path.length - 1,
-            owner = diff.getPath(path.slice(0, last));
+            owner = buildPath(path.slice(0, last));
         return grey(owner) + '.' + color(path[last]);
     },
     N: function (diff) {
@@ -33,26 +26,21 @@ JSONDiff.prototype.renders = {
         return this.ND(diff, inverseGreen, 'lhs');
     },
     E: function (diff) {
-        return grey(diff.getPath()) + ' = ' +
-            inverseGreen(diff.getStringifyField('rhs')) +
-            inverseRed(diff.getStringifyField('lhs'));
+        return grey(buildPath(diff.path)) + ' = ' +
+            inverseGreen(stringify(diff['rhs'])) +
+            inverseRed(stringify(diff['lhs']));
     },
     A: function (diff) {
-        return grey(diff.getPath() + '[' + diff.data.index + ']') +
-            new JSONDiff(diff.data.item).getText();
+        return grey(buildPath(diff.path) + '[' + diff.index + ']') +
+            renders[diff.item.kind](diff.item);
     }
 };
 
-JSONDiff.prototype.getStringifyField = function (field) {
-    return stringifyObject(this.data[field], { indent: '  ' });
+function stringify(obj) {
+    return stringifyObject(obj, { indent: indent });
 };
 
-JSONDiff.prototype.getText = function () {
-    return this.renders[this.data.kind](this);
-};
-
-JSONDiff.prototype.getPath = function (path) {
-    path = path || this.data.path;
+function buildPath(path) {
     if (!Array.isArray(path)) return '';
 
     return path.reduce(function (acc, item) {
@@ -60,4 +48,12 @@ JSONDiff.prototype.getPath = function (path) {
             acc + '[' + item + ']' :
             acc + '.' + item;
     }, 'obj');
+};
+
+module.exports = function(diff, params) {
+    if (params && params.indent) {
+        indent = params.indent;
+    }
+
+    return renders[diff.kind](diff);
 };
